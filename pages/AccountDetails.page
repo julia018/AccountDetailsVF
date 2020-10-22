@@ -1,0 +1,91 @@
+<apex:page standardController="Account" extensions="AccWithContactsController">
+    <apex:form >
+        <apex:pageBlock title="Account">
+            <p><em>Name</em> : {!account.name}</p> 
+            <p><em>Owner</em> : {!account.OwnerId}</p> 
+            <p><em>Type</em> : {!account.Type}</p> 
+            <p><em>Account Source</em> : {!account.AccountSource}</p> 
+            <p><em>Annual Revenue</em> : {!account.AnnualRevenue}</p> 
+            <p><em>Rating</em> : {!account.Rating}</p> 
+            <p><em>Created By</em> : {!account.CreatedById}</p> 
+            <p><em>Industry</em> : {!account.Industry}</p> 
+            <p><em>Number Of Employees</em> : {!account.NumberOfEmployees}</p> 
+            <p><em>Fax</em> : {!account.Fax}</p> 
+        </apex:pageBlock>
+        <apex:pageBlock id="pb" Title="Contacts">
+            <apex:pageBlockTable value="{!Contacts}" var="c">
+                <apex:column value="{!c.Name}"/>
+                <apex:column value="{!c.Phone}"/>
+                <apex:column value="{!c.Email}"/>
+                <apex:column value="{!c.Fax}"/>
+                <apex:column value="{!c.Department}"/>
+            </apex:pageBlockTable>
+            <apex:panelGrid columns="7">
+                <apex:commandButton status="fetchStatus" reRender="pb" value="|<" action="{!setCon.first}" disabled="{!!setCon.hasPrevious}" title="First Page"/>
+                <apex:commandButton status="fetchStatus" reRender="pb" value="<" action="{!setCon.previous}" disabled="{!!setCon.hasPrevious}" title="Previous Page"/>
+                <apex:commandButton status="fetchStatus" reRender="pb" value=">" action="{!setCon.next}" disabled="{!!setCon.hasNext}" title="Next Page"/>
+                <apex:commandButton status="fetchStatus" reRender="pb" value=">|" action="{!setCon.last}" disabled="{!!setCon.hasNext}" title="Last Page"/>
+                <apex:outputText >{!(setCon.pageNumber * size)+1-size}-{!IF((setCon.pageNumber * size)>noOfRecords, noOfRecords,(setCon.pageNumber * size))} of {!noOfRecords}</apex:outputText>
+                <apex:commandButton status="fetchStatus" reRender="pb" value="Refresh" action="{!refresh}" title="Refresh Page"/>
+                <apex:outputPanel style="color:#4AA02C;font-weight:bold">
+                    <apex:actionStatus id="fetchStatus" startText="Fetching..." stopText=""/>
+                </apex:outputPanel>
+            </apex:panelGrid>
+        </apex:pageBlock>
+
+        <!-- NEW ACCOUNT-->        
+        <apex:pageBlock title="Create Account" tabStyle="Account" mode="edit">
+            <apex:pageBlockSection title="Account Information" id="newAcc" columns="1">
+                <apex:inputField label="Account Name" value="{!newAccount.Name}" id="name"/>            
+                <apex:inputField label="Parent Account" value="{!newAccount.ParentId}"/> 
+                <apex:inputField label="Account Number" value="{!newAccount.AccountNumber}"/> 
+                <apex:inputField label="Account Site" value="{!newAccount.Site}"/> 
+                <apex:inputField label="Type" value="{!newAccount.Type}"/> 
+                <apex:inputField label="Industry" value="{!newAccount.Industry}"/> 
+                <apex:inputField label="Annual Revenue" value="{!newAccount.AnnualRevenue}"/> 
+                <apex:inputField label="Rating" value="{!newAccount.Rating}"/> 
+                <apex:inputField label="Phone" value="{!newAccount.Phone}"/> 
+                <apex:inputField label="Fax" value="{!newAccount.Fax}"/> 
+                <apex:inputField label="Website" value="{!newAccount.Website}"/> 
+                <apex:inputField label="Ticker Symbol" value="{!newAccount.TickerSymbol}"/> 
+                <apex:inputField label="Ownership" value="{!newAccount.Ownership}"/> 
+                <apex:inputField label="Number of Employees" value="{!newAccount.NumberOfEmployees}"/> 
+                <apex:inputField label="SIC Code" value="{!newAccount.Sic}"/>               
+
+            </apex:pageBlockSection>
+            <apex:pageBlockSection title="Description Information" columns="1">
+                <apex:inputField label="Description" value="{!newAccount.Description}"/>           
+            </apex:pageBlockSection>      
+            <apex:pageBlockButtons>
+                <apex:commandButton action="{!saveNewAccount}" value="Save Account"/>
+                <apex:commandButton action="{!clearNewAccount}" value="New Account" reRender="newAcc"/>               
+
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+
+        <!-- NEW CONTACT-->
+        
+        <apex:pageBlock title="Create Contact" id="NewContact" tabStyle="Contact" mode="edit">
+            <apex:pageMessages id="showmsg"></apex:pageMessages>
+            <apex:pageBlockSection title="Contact Information" columns="1">               
+                
+                <apex:inputField label="Name" value="{!newContact.Lastname}"/>
+                <apex:inputField label="Birthdate" value="{!newContact.Birthdate}"/>
+                <apex:inputField label="Reports To" value="{!newContact.ReportsToId}"/>
+                <apex:inputField label="Lead Source" value="{!newContact.LeadSource}"/>
+                <apex:inputField label="Phone" value="{!newContact.Phone}"/>
+                <apex:inputField label="Home Phone" value="{!newContact.HomePhone}"/>
+                <apex:inputField label="Mobile" value="{!newContact.MobilePhone}"/>
+                <apex:inputField label="Other Phone" value="{!newContact.OtherPhone}"/>
+                <apex:inputField label="Fax" value="{!newContact.Fax}"/>
+                <apex:inputField label="Email" value="{!newContact.Email}"/>
+                <apex:inputField label="Assistant" value="{!newContact.AssistantName}"/>
+                <apex:inputField label="Asst. Phone" value="{!newContact.AssistantPhone}"/>
+            </apex:pageBlockSection>
+            <apex:pageBlockButtons>                
+                <apex:commandButton action="{!saveNewContact}" value="Save Contact"/>
+                <apex:commandButton action="{!clearNewContact}" value="New Contact" reRender="newContact"/>
+            </apex:pageBlockButtons>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>
